@@ -1,8 +1,6 @@
-const http = require("http")
 const fs = require("fs")
 
-const server = http.createServer((req,res)=>{
-
+const requestHandler = (req,res) =>{
     if(req.url === '/'){
         res.write('<html>')
         res.write('<head><title>server</title></head>')
@@ -20,7 +18,7 @@ const server = http.createServer((req,res)=>{
         return req.on('end',()=>{
             const parsedBody = Buffer.concat(body).toString();
             const message = parsedBody.split("=")[1];
-            fs.writeFile('SimpleServer/message.txt',message,(err)=>{
+            fs.writeFile('SimpleServer/Server1/message.txt',message,(err)=>{
                 res.statusCode = 302;
                 res.setHeader('Location','/')
                 return res.end();
@@ -29,8 +27,14 @@ const server = http.createServer((req,res)=>{
         })  
 
     }
-})
+}
 
-server.listen(2000,()=>{
-    console.log("Server is live...")
-})
+module.exports = requestHandler;
+
+// module.exports = {
+//     handler: requestHandler,
+//     someText: "Some text"
+// }
+
+// exports.handler = requestHandler;
+// exports.someText = 'Some text'
