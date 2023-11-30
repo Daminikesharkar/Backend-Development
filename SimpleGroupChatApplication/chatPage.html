@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat</title>
+</head>
+<body>
+  <form id="messageForm">
+    <label for="message">Message:</label>
+    <input type="text" id="message" name="message" required>
+    <button type="submit">Send</button>
+  </form>
+
+  <ul id="messagesList"></ul>
+
+  <script>
+
+    const username = localStorage.getItem('username');
+    
+    document.getElementById('messageForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+
+      const messageInput = document.getElementById('message');
+      const message = messageInput.value;
+
+      await fetch('/send-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, message }),
+      });
+
+      messageInput.value = '';
+    });
+
+    async function fetchMessages() {
+      const response = await fetch('/get-messages');
+      const messages = await response.json();
+
+      const messagesList = document.getElementById('messagesList');
+      messagesList.innerHTML = '';
+
+      messages.forEach(({ username, message }) => {
+        const li = document.createElement('li');
+        li.textContent = `${username}: ${message}`;
+        messagesList.appendChild(li);
+      });
+    }
+
+    setInterval(fetchMessages, 1000);
+  </script>
+</body>
+</html>
