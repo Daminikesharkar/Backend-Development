@@ -1,29 +1,59 @@
-const Cart = require('./cart');
-const db = require('../util/database')
+const sequelize = require('../util/database')
+const Sequelize = require('sequelize');
 
-module.exports = class Product {
-  constructor(id, title, imageUrl, description, price) {
-    this.id = id;
-    this.title = title;
-    this.imageUrl = imageUrl;
-    this.description = description;
-    this.price = price;
+//define model
+const Product = sequelize.define('product',{
+  id:{
+    type:Sequelize.INTEGER,
+    allowNull:false,
+    autoIncrement:true,
+    primaryKey:true
+  },
+  title:{
+    type:Sequelize.STRING,
+    allowNull:false
+  },
+  price:{
+    type:Sequelize.DOUBLE,
+    allowNull:false
+  },
+  description:{
+    type:Sequelize.STRING,
+    allowNull:false
+  },
+  imageUrl:{
+    type:Sequelize.STRING,
+    allowNull:false
   }
+  });
 
-  save() {
-    return db.execute('INSERT INTO products (title,price,description,imageUrl) values (?,?,?,?)',
-    [this.title,this.price,this.description,this.imageUrl])
-  }
+module.exports = Product;
 
-  static deleteById(id) {
-    return db.execute('DELETE FROM products where id = ?',[id])
-  }
+// module.exports = class Product {
+//   constructor(id, title, imageUrl, description, price) {
+//     this.id = id;
+//     this.title = title;
+//     this.imageUrl = imageUrl;
+//     this.description = description;
+//     this.price = price;
+//   }
 
-  static fetchAll() {
-    return (db.execute('Select * from products'));
-  }
+//   save() {
+//     return db.execute('INSERT INTO products (title,price,description,imageUrl) values (?,?,?,?)',
+//     [this.title,this.price,this.description,this.imageUrl])
+//   }
 
-  static findById(id) {
-    return (db.execute('SELECT * from products where products.id = ?',[id]))
-  }
-};
+//   static deleteById(id) {
+//     return db.execute('DELETE FROM products where id = ?',[id])
+//   }
+
+//   static fetchAll() {
+//     return (db.execute('Select * from products'));
+//   }
+
+//   static findById(id) {
+//     return (db.execute('SELECT * from products where products.id = ?',[id]))
+//   }
+// };
+
+
